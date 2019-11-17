@@ -1,0 +1,2 @@
+class CoursesManager(object):
+    pass

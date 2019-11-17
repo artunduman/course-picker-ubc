@@ -1,0 +1,3 @@
+
+class GradesManager(object):
+    pass
