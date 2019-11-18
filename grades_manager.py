@@ -1,3 +1,9 @@
 
+ENDPOINT = 'ubcgrades.com/api'
+
 class GradesManager(object):
-    pass
+    def __init__(self):
+        self.endpoint = 'https://ubcgrades.com/api'
+
+    
+
