@@ -43,7 +43,8 @@ def run(args):
     current_session = Session(args.session)
     courses_manager = CoursesManager(args.courses, current_session, args.term)
     info = courses_manager.get_sections_info_json()
-    print(json.dumps(info, indent=4))
+    # print(json.dumps(info, indent=4))
+    
 
 
         

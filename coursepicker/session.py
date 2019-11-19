@@ -6,6 +6,7 @@ sessions = {
 
 class Session(object):
     def __init__(self, full_session):
+        assert len(full_session) == 5
         self._year = full_session[:4]
         self._term = full_session[4]
 
@@ -27,10 +28,15 @@ class Session(object):
     def __add__(self, r):
         years = int(r/2)
         session_switch = abs(r)%2
+        term = self._term
         if session_switch is 1:
-            term = sessions['WINTER'] if self.session == sessions['SUMMER'] else sessions['WINTER']
-        self.current_year += years
-        return self.get_year()
+            if self._term == sessions['SUMMER']:
+                term = sessions['WINTER']
+            else:
+                term = sessions['SUMMER']
+                years += 1
+        new_year = int(self._year) + years
+        return '{}{}'.format(new_year, term)
 
     def __sub__(self, r):
         return self.__add__(-r)
