@@ -13,10 +13,10 @@ from session import Session
 def get_args():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--courses',
-                        dest='courses',
+    parser.add_argument('--config',
+                        dest='config',
                         required=True,
-                        nargs='+',
+                        default='/etc/coursepicker/config.yml',
                         help='Space separated course names, eg: CPSC310')
 
     parser.add_argument('--previous-terms',
@@ -46,11 +46,7 @@ def run(args):
     # print(json.dumps(info, indent=4))
     
 
-
-        
-
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    args = get_args()
-    run(args)
-    
+    arguments = get_args()
+    run(arguments)

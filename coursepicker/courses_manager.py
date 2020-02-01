@@ -28,7 +28,6 @@ class CoursesManager(object):
                 logger.error('Exception caught: {}'.format(e))
         return course_list
 
-
     def _get_sections(self, course_code, course_number):
         url = "https://{}/{}/{}/{}".format(
             ENDPOINT,
@@ -40,16 +39,15 @@ class CoursesManager(object):
         resp = self.requests_session.get(url)
         if resp.status_code is not requests.codes.ok:
             msg = 'No course {}{} found in session {}'.format(course_code, course_number, self.session.get_full_session())
-            raise Exception(msg)
             logger.error('In get_sections resp.status_code: {}'.format(resp.status_code))
+            raise Exception(msg)
 
         return resp.json()['sections']
 
-
-    '''
-    Filters out labs
-    '''
     def _get_filtered_sections(self, course_code, course_number):
+        """
+        Filters out labs
+        """
         sections = self._get_sections(course_code, course_number)
         filtered = [k for k in sections if k[0] != 'L']
         return filtered
