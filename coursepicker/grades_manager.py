@@ -2,6 +2,7 @@ import requests
 
 ENDPOINT = 'ubcgrades.com/api/grades'
 
+
 class GradesManager(object):
     def __init__(self, info, terms_to_check, current_session):
         self.info_dict = info

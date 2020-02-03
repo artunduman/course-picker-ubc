@@ -1,7 +1,7 @@
 import requests
 import logging
 
-from course_parser import CourseParser
+from coursepicker.course_parser import CourseParser
 
 logger = logging.getLogger('CoursePicker')
 
