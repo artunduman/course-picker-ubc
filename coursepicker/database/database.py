@@ -10,7 +10,7 @@ logger = logging.getLogger()
 
 # TODO Make all variables configurable
 
-DATABASE_URL = ''  # TODO change it and make configurable
+DATABASE_URL = 'postgres:///:memory:'  # TODO change it and make configurable
 Base = declarative_base()
 
 
