@@ -3,10 +3,10 @@ import argparse
 import logging
 import json
 
-from courses_manager import CoursesManager
-from courses_manager import CoursesManager
-from course_parser import CourseParser
-from session import Session
+from coursepicker.courses_manager import CoursesManager
+from coursepicker.courses_manager import CoursesManager
+from coursepicker.course_parser import CourseParser
+from coursepicker.session import Session
 
 # logger = logging.get_logger('CoursePicker')
 
