@@ -9,8 +9,25 @@ services:
       - "5000:5000"
     depends_on:
       - db
+    volumes:
+      - ./coursepicker:/opt/coursepicker/coursepicker
   db:
     image: postgres
     restart: always
     environment:
       POSTGRES_PASSWORD: example
+  test:
+    command: 'pytest test'
+    build:
+      context: .
+      dockerfile: containers/Dockerfile
+    volumes:
+      - ./test:/opt/coursepicker/test
+
+  cli:
+      command: '/bin/bash'
+      build:
+          context: .
+          dockerfile: containers/Dockerfile
+      volumes:
+          - ./:/opt/coursepicker/

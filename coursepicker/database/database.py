@@ -2,7 +2,7 @@
 import logging
 
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Float
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 import enum
 
@@ -16,8 +16,8 @@ Base = declarative_base()
 
 class DatabaseAccess:
     def __init__(self, session=None, engine=None):
-        self.session = session or sessionmaker()
-        self.engine = engine or self._create_engine(DATABASE_URL)
+        self.session = session
+        self.engine = engine
 
     @staticmethod
     def _create_engine(uri):
@@ -33,8 +33,17 @@ class DatabaseAccess:
         return create_engine(uri, **options)
 
     def init_session(self):
+        logger.info('Initializing database session')
+        if not self.engine:
+            self.engine = self._create_engine(DATABASE_URL)
+        if not self.session:
+            self.session = sessionmaker()
         self.session.configure(bind=self.engine)
         Base.metadata.create_all(self.engine)
+
+    def add_object(self, type, obj):
+        if isinstance(obj, type):
+            self.session.add(obj)
 
 
 class Professor(Base):

@@ -7,5 +7,6 @@ COPY requirements.txt requirements.txt
 RUN pip3.7 install -r requirements.txt
 
 COPY ./coursepicker /opt/coursepicker/coursepicker
+RUN export PYTHONPATH=${PYTHONPATH}:/opt/coursepicker
 
 CMD ['gunicorn', '-b', '127.0.0.1:5000', 'coursepicker.app:application']
