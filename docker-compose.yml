@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: containers/Dockerfile
     volumes:
-      - ./test:/opt/coursepicker/test
+      - ./:/opt/coursepicker/
 
   cli:
       command: '/bin/bash'

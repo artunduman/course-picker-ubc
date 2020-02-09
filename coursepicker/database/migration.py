@@ -1,10 +1,14 @@
 #!/usr/bin/env python3.7
-from database import DatabaseAccess
+from coursepicker.database.database import DatabaseAccess, Grade
 from pathlib import Path
+from coursepicker.config import get_config
 
 import re
 import pandas as pd
 import argparse
+
+# TODO make configurable (argparse)
+CONFIG_PATH = '/opt/coursepicker/conf/local.ini'
 
 class PandasParserCli:
     """
@@ -12,19 +16,14 @@ class PandasParserCli:
     converts them into pandas df.
     Only run once.
     """
-    def __init__(self, path, multiple_files=True):
+    def __init__(self, path):
         self.path = path
-        self.multiple_files = multiple_files
 
     def _get_csv_paths(self):
         return [filename for filename in Path(self.path).rglob('*.csv')]
 
-
     def _convert_csv_files(self):
-        if self.multiple_files:
-            paths = self._get_csv_paths()
-        else:
-            paths = [self.path]
+        paths = self._get_csv_paths()
         li = []
 
         for filename in paths:
@@ -44,23 +43,49 @@ class MigrationCli:
     Not scalable with data bytes (Because of memory limitations)
     """
     def __init__(self, path):
-        self.db_access = DatabaseAccess()
+        self.config = get_config(CONFIG_PATH)
+        self.db_access = DatabaseAccess(self.config)
         self.path = path
+
+    def normalize(self, string):
+        return string.replace(' ', '-').lower()
 
     def init_session(self):
         self.db_access.init_session()
 
     def _write_to_db(self):
         """
-        Writes everything in self.path csv file to database
+        Writes all grade entries in self.path csv file to database
         :return:
         """
+        df = pd.read_csv(self.path, index_col=None, header=0)
+        for index, row in df.iterrows():
+            fields = {
+                'campus': row['Campus'],
+                'year': row['Year'],
+                'session': row['Session'],
+                'subject': row['Subject'],
+                'code': row['Course'],
+                'detail': row['Detail'],
+                'section': row['Section'],
+                'title': row['Title'],
+                'professor': self.normalize(str(row['Professor'])),
+                'enrolled': row['Enrolled'],
+                'avg': row['Avg'],
+                'std_dev': row['Std'],
+                'high': row['High'],
+                'low': row['Low'],
+            }
+            grade_entry = Grade(**fields)
+            self.db_access.add_object(grade_entry)
+        self.db_access.session.commit()
+
 
     def migrate(self):
         self.init_session()
         self._write_to_db()
         # print(df)
-        df.to_csv('/opt/coursepicker/grade-data/combined.csv')
+
 
 if __name__ == '__main__':
     cli = MigrationCli(path='/opt/coursepicker/grade-data/combined.csv')

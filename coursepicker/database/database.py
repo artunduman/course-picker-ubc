@@ -15,7 +15,8 @@ Base = declarative_base()
 
 
 class DatabaseAccess:
-    def __init__(self, session=None, engine=None):
+    def __init__(self, config, session=None, engine=None):
+        self.config = config
         self.session = session
         self.engine = engine
 
@@ -41,20 +42,19 @@ class DatabaseAccess:
         self.session.configure(bind=self.engine)
         Base.metadata.create_all(self.engine)
 
-    def add_object(self, type, obj):
-        if isinstance(obj, type):
-            self.session.add(obj)
+    def add_object(self, obj):
+        self.session.add(obj)
 
 
-class Professor(Base):
-    __tablename__ = 'professors'
-    id = Column(Integer, primary_key=True)
-    fullname = Column(String, unique=True)
-
-    def __repr__(self):
-        return "<Professor(fullname='%s')>" % (
-            self.fullname
-        )
+# class Professor(Base):
+#     __tablename__ = 'professors'
+#     id = Column(Integer, primary_key=True)
+#     fullname = Column(String, unique=True)
+#
+#     def __repr__(self):
+#         return "<Professor(fullname='%s')>" % (
+#             self.fullname
+#         )
 
 
 class Grade(Base):
@@ -74,7 +74,7 @@ class Grade(Base):
     std_dev = Column(Float)
     high = Column(Float)
     low = Column(Float)
-    professor_id = Column(Integer, ForeignKey('professors.id'))
+    professor_id = Column(Integer)
 
     def __repr__(self):
         return "<Grade(campus='%s', year='%s', session='%s', subject='%s', code='%s', detail='%s', " \
