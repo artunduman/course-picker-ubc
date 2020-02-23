@@ -1,3 +1,4 @@
 ./conf/prod.ini
 .env
 .idea
+prod.ini

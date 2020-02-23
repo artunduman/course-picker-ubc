@@ -1,4 +1,4 @@
-from coursepicker.database.migration import PandasParserCli
+from migration import PandasParserCli
 from pathlib import Path
 
 import unittest

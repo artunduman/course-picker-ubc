@@ -1,4 +1,4 @@
-from coursepicker.config import get_config
+from coursepicker.utils.config import get_config
 
 import unittest
 
@@ -6,16 +6,13 @@ import unittest
 class CourseParserTest(unittest.TestCase):
     # Returns True or False.
     def test_get_config(self):
-        config = get_config('/opt/coursepicker/test/unit/utils/test_config.ini')
-        assert config._sections == {
+        config = get_config('local')
+        assert config == {
             'database': {
                 'host': 'localhost',
                 'db_identifier': 'course-picker',
                 'user': 'admin',
                 'password': '12345'
-            },
-            'auth': {
-                'client': 'ubc-course-picker'
             }
         }
 
