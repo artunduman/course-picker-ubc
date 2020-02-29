@@ -70,8 +70,8 @@ class MigrationCli:
     """
     Not scalable with data bytes (Because of memory limitations)
     """
-    def __init__(self, path):
-        self.config = get_config(ENV)
+    def __init__(self, path, environment):
+        self.config = get_config(environment)
         self.db_access = DatabaseAccess(self.config)
         self.path = path
 
@@ -111,7 +111,6 @@ class MigrationCli:
     def migrate(self):
         self.init_session()
         self._write_to_db()
-        # print(df)
 
     def describe_db(self):
         self.init_session()
@@ -122,8 +121,8 @@ class MigrationCli:
 
 
 if __name__ == '__main__':
-    cli = MigrationCli(path='/opt/coursepicker/grade-data/combined.csv')
     args = get_args()
+    cli = MigrationCli(path='/opt/coursepicker/grade-data/combined.csv', environment=args.env)
     if args.action == 'describe':
         cli.describe_db()
     if args.action == 'migrate':
