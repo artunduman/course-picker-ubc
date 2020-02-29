@@ -27,7 +27,9 @@ services:
   cli:
       command: '/bin/bash'
       build:
-          context: .
-          dockerfile: containers/Dockerfile
+        context: .
+        dockerfile: containers/Dockerfile
       volumes:
-          - ./:/opt/coursepicker/
+        - ./:/opt/coursepicker/
+      depends_on:
+        - db

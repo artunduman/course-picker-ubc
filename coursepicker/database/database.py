@@ -53,7 +53,7 @@ class Grade(Base):
 
 
 Session = sessionmaker()
-Base.metadata.create_all()
+
 
 
 class DatabaseAccess:
@@ -87,6 +87,7 @@ class DatabaseAccess:
             self.engine = self._create_engine(self.db_url)
         if not self.session:
             self.session = Session(bind=self.engine)
+        Base.metadata.create_all(self.engine)
 
     def add_object(self, obj):
         self.session.add(obj)

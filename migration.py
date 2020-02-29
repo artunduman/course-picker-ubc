@@ -3,13 +3,40 @@ from coursepicker.database.database import DatabaseAccess, Grade
 from pathlib import Path
 from coursepicker.utils.config import get_config
 import logging
-
+import argparse
 import pandas as pd
 
 # TODO make configurable (argparse)
-ENV = 'prod'
+ENV = 'local'
 logger = logging.getLogger('migration')
 
+
+def get_args():
+    parser = argparse.ArgumentParser()
+
+    subparser = parser.add_subparsers(title='Actions',
+                                      dest='action',
+                                      description='Action',
+                                      help='')
+
+    describe = subparser.add_parser('describe')
+    migrate = subparser.add_parser('migrate')
+
+    describe.add_argument('-e',
+                          '--environment',
+                          dest='env',
+                          required=True,
+                          default='local',
+                          help='Environment to load config for')
+
+    migrate.add_argument('-e',
+                         '--environment',
+                         dest='env',
+                         required=True,
+                         default='local',
+                         help='Environment to load config for')
+
+    return parser.parse_args()
 
 class PandasParserCli:
     """
@@ -86,7 +113,18 @@ class MigrationCli:
         self._write_to_db()
         # print(df)
 
+    def describe_db(self):
+        self.init_session()
+        for instance in self.db_access.session.query(Grade):
+            print('Year {} Subject {} Code {}'.format(instance.year,
+                                                      instance.subject,
+                                                      instance.code))
+
 
 if __name__ == '__main__':
     cli = MigrationCli(path='/opt/coursepicker/grade-data/combined.csv')
-    cli.migrate()
+    args = get_args()
+    if args.action == 'describe':
+        cli.describe_db()
+    if args.action == 'migrate':
+        cli.migrate()

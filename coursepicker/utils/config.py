@@ -2,7 +2,7 @@ import configparser
 
 
 def get_config(env):
-    if env != 'prod' or 'local':
+    if env != 'prod' and env != 'local':
         env = 'local'
 
     config = configparser.ConfigParser()
