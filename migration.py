@@ -21,6 +21,7 @@ def get_args():
 
     describe = subparser.add_parser('describe')
     migrate = subparser.add_parser('migrate')
+    delete = subparser.add_parser('delete')
 
     describe.add_argument('-e',
                           '--environment',
@@ -30,6 +31,13 @@ def get_args():
                           help='Environment to load config for')
 
     migrate.add_argument('-e',
+                         '--environment',
+                         dest='env',
+                         required=True,
+                         default='local',
+                         help='Environment to load config for')
+
+    delete.add_argument('-e',
                          '--environment',
                          dest='env',
                          required=True,
@@ -79,6 +87,7 @@ class MigrationCli:
         return string.replace(' ', '-').lower()
 
     def init_session(self):
+        # import pdb; pdb.set_trace()
         self.db_access.init_session()
 
     def _write_to_db(self):
@@ -87,6 +96,7 @@ class MigrationCli:
         :return:
         """
         df = pd.read_csv(self.path, index_col=None, header=0)
+        grades = []
         for index, row in df.iterrows():
             fields = {
                 'campus': row['Campus'],
@@ -105,7 +115,9 @@ class MigrationCli:
                 'low': row['Low'],
             }
             grade_entry = Grade(**fields)
-            self.db_access.add_object(grade_entry)
+            grades.append(grade_entry)
+
+        self.db_access.session.bulk_save_objects(grades)
         self.db_access.session.commit()
 
     def migrate(self):
@@ -119,6 +131,15 @@ class MigrationCli:
                                                       instance.subject,
                                                       instance.code))
 
+    def delete(self):
+        self.init_session()
+        try:
+            num_rows_deleted = self.db_access.session.query(Grade).delete()
+            self.db_access.session.commit()
+            print('Deleted rows: {}'.format(num_rows_deleted))
+        except Exception as e:
+            self.db_access.session.rollback()
+
 
 if __name__ == '__main__':
     args = get_args()
@@ -127,3 +148,5 @@ if __name__ == '__main__':
         cli.describe_db()
     if args.action == 'migrate':
         cli.migrate()
+    if args.action == 'delete':
+        cli.delete()

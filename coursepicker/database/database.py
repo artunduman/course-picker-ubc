@@ -55,7 +55,6 @@ class Grade(Base):
 Session = sessionmaker()
 
 
-
 class DatabaseAccess:
     def __init__(self, config, session=None, engine=None):
         db_config = config['database']
