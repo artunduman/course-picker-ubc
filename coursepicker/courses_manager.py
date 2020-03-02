@@ -1,15 +1,17 @@
+# USEFUL
+
 import requests
 import logging
 
 from coursepicker.course_parser import CourseParser
+from functools import lru_cache
 
 logger = logging.getLogger('CoursePicker')
 
-ENDPOINT = 'ubc-courses-api.herokuapp.com'
 
 class CoursesManager(object):
-
-    def __init__(self, courses, session, term):
+    def __init__(self, courses, session, term, config):
+        self.config = config['courses-api']
         self.course_list = self.parse_courses(courses)
         self.session = session
         self.term = term
@@ -28,9 +30,10 @@ class CoursesManager(object):
                 logger.error('Exception caught: {}'.format(e))
         return course_list
 
+    @lru_cache(1024)
     def _get_sections(self, course_code, course_number):
         url = "https://{}/{}/{}/{}".format(
-            ENDPOINT,
+            self.config.endpoint,
             self.session.get_full_session(),
             course_code,
             course_number
@@ -55,9 +58,10 @@ class CoursesManager(object):
     '''
     @param sections: list of section numbers to query
     '''
+    @lru_cache(2048)
     def _get_section_info(self, course_code, course_number, section):
         url = "https://{}/{}/{}/{}/{}".format(
-            ENDPOINT,
+            self.config.endpoint,
             self.session.get_full_session(),
             course_code,
             course_number,

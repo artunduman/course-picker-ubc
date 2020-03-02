@@ -127,9 +127,12 @@ class MigrationCli:
     def describe_db(self):
         self.init_session()
         for instance in self.db_access.session.query(Grade):
-            print('Year {} Subject {} Code {}'.format(instance.year,
-                                                      instance.subject,
-                                                      instance.code))
+            print('Year {} Subject {} Code {} Prof {}'.format(
+                instance.year,
+                instance.subject,
+                instance.code,
+                instance.professor
+            ))
 
     def delete(self):
         self.init_session()
@@ -139,6 +142,9 @@ class MigrationCli:
             print('Deleted rows: {}'.format(num_rows_deleted))
         except Exception as e:
             self.db_access.session.rollback()
+
+    def write_averages(self):
+        raise NotImplementedError
 
 
 if __name__ == '__main__':
@@ -150,3 +156,5 @@ if __name__ == '__main__':
         cli.migrate()
     if args.action == 'delete':
         cli.delete()
+    if args.action == 'averages':
+        cli.write_averages()

@@ -11,6 +11,7 @@ services:
       - db
     volumes:
       - ./coursepicker:/opt/coursepicker/coursepicker
+      - ./conf:/opt/coursepicker/conf
   db:
     image: postgres
     restart: always

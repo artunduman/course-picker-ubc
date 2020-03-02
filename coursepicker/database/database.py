@@ -92,12 +92,12 @@ class DatabaseAccess:
         self.session.add(obj)
 
 
-# class Professor(Base):
-#     __tablename__ = 'professors'
-#     id = Column(Integer, primary_key=True)
-#     fullname = Column(String, unique=True)
-#
-#     def __repr__(self):
-#         return "<Professor(fullname='%s')>" % (
-#             self.fullname
-#         )
+class Professor(Base):
+    __tablename__ = 'professors'
+    id = Column(Integer, primary_key=True)
+    fullname = Column(String, unique=True)
+
+    def __repr__(self):
+        return "<Professor(fullname='%s')>" % (
+            self.fullname
+        )
