@@ -1,3 +1,5 @@
+# DEPRECATE
+
 sessions = {
     'WINTER': 'W',
     'SUMMER': 'S'

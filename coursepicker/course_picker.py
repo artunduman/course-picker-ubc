@@ -1,11 +1,10 @@
+# DEPRECATE
+
 #!/usr/bin/env python3.7
 import argparse
 import logging
-import json
 
 from coursepicker.courses_manager import CoursesManager
-from coursepicker.courses_manager import CoursesManager
-from coursepicker.course_parser import CourseParser
 from coursepicker.session import Session
 
 # logger = logging.get_logger('CoursePicker')

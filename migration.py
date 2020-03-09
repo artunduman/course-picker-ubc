@@ -7,7 +7,6 @@ import argparse
 import pandas as pd
 
 # TODO make configurable (argparse)
-ENV = 'local'
 logger = logging.getLogger('migration')
 
 
@@ -46,6 +45,7 @@ def get_args():
 
     return parser.parse_args()
 
+
 class PandasParserCli:
     """
     Gets the path of csv files and
@@ -83,7 +83,7 @@ class MigrationCli:
         self.db_access = DatabaseAccess(self.config)
         self.path = path
 
-    def normalize(self, string):
+    def _normalize(self, string):
         return string.replace(' ', '-').lower()
 
     def init_session(self):
@@ -107,7 +107,7 @@ class MigrationCli:
                 'detail': row['Detail'],
                 'section': row['Section'],
                 'title': row['Title'],
-                'professor': self.normalize(str(row['Professor'])),
+                'professor': self._normalize(str(row['Professor'])),
                 'enrolled': row['Enrolled'],
                 'avg': row['Avg'],
                 'std_dev': row['Std'],

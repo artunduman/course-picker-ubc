@@ -1,4 +1,4 @@
-from coursepicker.course_parser import CourseParser
+from coursepicker.utils.course_parser import CourseParser
 
 import unittest
 
@@ -12,8 +12,8 @@ class CourseParserTest(unittest.TestCase):
     def test_parse_courses(self):
         result = self.course_parser.parse()
         assert result == {
-            'cpsc': ['322'],
-            'math': ['200', '221']
+            'CPSC': ['322'],
+            'MATH': ['200', '221']
         }
 
 

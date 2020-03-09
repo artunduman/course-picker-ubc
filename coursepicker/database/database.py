@@ -4,6 +4,7 @@ import logging
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from functools import lru_cache
 
 logger = logging.getLogger()
 
@@ -90,6 +91,11 @@ class DatabaseAccess:
 
     def add_object(self, obj):
         self.session.add(obj)
+
+    @lru_cache(2048)
+    def get_grades_by_prof(self, prof):
+        query = self.session.query(Grade).filter(Grade.professor == prof)  # TODO regex for multiple profs
+        return query.all()
 
 
 class Professor(Base):

@@ -1,3 +1,5 @@
+# DEPRECATE
+
 import requests
 
 ENDPOINT = 'ubcgrades.com/api/grades'
@@ -13,7 +15,7 @@ class GradesManager(object):
     def get_course_dist(self, session, course_code, course_number):
         url = 'https://{}/{}/{}/{}'.format(
             ENDPOINT,
-            session.get_full_session(),
+            session,
             course_code,
             course_number
         )
