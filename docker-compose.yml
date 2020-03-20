@@ -18,7 +18,7 @@ services:
     environment:
       POSTGRES_PASSWORD: example
   test:
-    command: 'pytest test'
+    command: pytest test -k dummy
     build:
       context: .
       dockerfile: containers/Dockerfile

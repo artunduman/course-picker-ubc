@@ -2,9 +2,18 @@
 
 import requests
 import logging
+import datetime
 
 from coursepicker.utils.course_parser import CourseParser
 from functools import lru_cache
+from enum import Enum
+
+class Weekdays(Enum):
+    Mon = 1
+    Tue = 2
+    Wed = 3
+    Thu = 4
+    Fri = 5
 
 logger = logging.getLogger('CoursePicker')
 
@@ -16,7 +25,29 @@ class CoursesManager(object):
         self.session = self.config['current_session']
         self.term = self.config['current_term']
         self.requests_session = requests.Session()
-    
+
+    def _parse_to_datetime(self, days, start, end):
+        """
+        :param days: string representing weekdays
+        :param start: string of start hour
+        :return: list of start datetime objects and timedelta of length (for the first week of 2001)
+        """
+        ret = []
+        start_time = datetime.datetime.strptime(start, '%H:%M')
+        end_time = datetime.datetime.strptime(end, '%H:%M')
+        delta = end_time - start_time
+        for day in days:
+            starts = start.strip().split(':')
+            start_datetime = datetime.datetime(
+                2001,
+                1,
+                getattr(Weekdays, day),
+                int(starts[0]),
+                int(starts[1])
+            )
+            ret.append(start_datetime)
+        return ret, delta
+
     '''
     Returns list of (code, number) tuples
     '''
@@ -97,9 +128,8 @@ class CoursesManager(object):
     {
         'CPSC310': {
             '101': {
-                'start': '12:30',
+                'start': ,
                 'end': '14:00',
-                'days': 'Tue Thu',
                 'prof': 'john-doe',
             }
         }
@@ -115,10 +145,10 @@ class CoursesManager(object):
                 for section in sections:
                     prof_name, start, end, days, activity, term = self._get_section_info(code, number, section)
                     prof_name = self._normalize(prof_name)
+                    start_times, duration = self._parse_to_datetime(days, start, end)
                     section_info = {
-                        'start': start,
-                        'end': end,
-                        'days': days,
+                        'start': start_times,
+                        'duration': duration,
                         'prof': prof_name
                     }
                     logger.debug('info: {} activity: {} term: {} will_add? {}'.format(
