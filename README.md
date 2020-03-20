@@ -1,13 +1,32 @@
-# CoursePickerUBC
+# Course Picker UBC
 
-This is a Dockerized web API to make course selection easier for UBC students. 
+A dockerized web API to optimize 
 
-# API
-GET hostname/v1?course=cpsc310&course=econ345
+## Getting Started
 
-# Progress
-MVP: API takes in a list of courses with an HTTP GET and returns a JSON of sections with highest historically average profs
+To start the server locally, build and run the docker image
+```
+docker-compose run --rm coursepicker
+```
+### Prerequisites
 
-# Next steps: 
-- Non-overlapping courses
-- Selection among many courses (3 out of 5 given etc.)
+You need docker installed on your machine
+
+http://docs.docker.com/install/
+
+### Installing
+
+After running the service, you can try the endpoint (It will work once the big PR is merged)
+```
+curl -XGET hostname/v1?course=cpsc310&course=econ345
+```
+
+## Running the tests
+
+```
+docker-compose run --rm test
+```
+
+## Progress
+Some more time and testing needed before the big PR is merged
+and the functionality start working
