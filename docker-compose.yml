@@ -1,7 +1,7 @@
 version: '3'
 services:
   coursepicker:
-    command: 'gunicorn -b 127.0.0.1:5000 coursepicker.app:application'
+    command: 'gunicorn -b 127.0.0.1:5000 --log-level debug --access-logfile - coursepicker.app:application'
     build:
       context: .
       dockerfile: containers/Dockerfile
@@ -18,7 +18,7 @@ services:
     environment:
       POSTGRES_PASSWORD: example
   test:
-    command: 'pytest test'
+    command: pytest test
     build:
       context: .
       dockerfile: containers/Dockerfile
