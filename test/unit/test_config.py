@@ -9,10 +9,13 @@ class CourseParserTest(unittest.TestCase):
         config = get_config('local')
         assert config == {
             'database': {
-                'host': 'localhost',
-                'db_identifier': 'course-picker',
-                'user': 'admin',
-                'password': '12345'
+                'host': 'coursepickerubc_db_1:5432',
+                'db_identifier': 'postgres',
+                'user': 'postgres',
+                'password': 'example'
+            },
+            'courses-api': {
+                'endpoint': 'ubc-courses-api.herokuapp.com'
             }
         }
 

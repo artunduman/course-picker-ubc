@@ -8,12 +8,14 @@ from coursepicker.utils.course_parser import CourseParser
 from functools import lru_cache
 from enum import Enum
 
+
 class Weekdays(Enum):
     Mon = 1
     Tue = 2
     Wed = 3
     Thu = 4
     Fri = 5
+
 
 logger = logging.getLogger('CoursePicker')
 
@@ -33,8 +35,13 @@ class CoursesManager(object):
         :return: list of start datetime objects and timedelta of length (for the first week of 2001)
         """
         ret = []
-        start_time = datetime.datetime.strptime(start, '%H:%M')
-        end_time = datetime.datetime.strptime(end, '%H:%M')
+        try:
+            # These are just for delta
+            start_time = datetime.datetime.strptime(start, '%H:%M')
+            end_time = datetime.datetime.strptime(end, '%H:%M')
+        except ValueError:
+            logger.error("The dates start: {} end: {} don't match HH:MM")
+            return
         delta = end_time - start_time
         for day in days:
             starts = start.strip().split(':')
